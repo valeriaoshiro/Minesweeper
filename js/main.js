@@ -29,9 +29,18 @@ function init(){
         board[el] = 'bomb';
     });
     console.log(board);
+    render();
 }
 
 function handleSquareClick(evt){
     evt.target.classList.remove('unclicked');
     evt.target.classList.add('clicked');
+}
+
+function render(){
+    board.forEach(function(el, index){
+        if(el === 'bomb'){
+            squares[index].innerHTML = '<i class="fa fa-bomb" aria-hidden="true"></i>';
+        }
+    });
 }
