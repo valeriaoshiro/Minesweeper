@@ -1,0 +1,17 @@
+.unclicked {
+    background: #BDC3C7;
+}
+
+.clicked {
+    background: #ECF0F1;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+td {
+    border: 1px solid black;
+    width: 30px;
+    height: 30px;
+}
