@@ -1,5 +1,5 @@
 /*----- app's state (variables) -----*/
-var board, randomBombs;
+var board, randomBombs, xcoor, ycoor;
 
 /*----- cached element references -----*/
 var squares = document.querySelectorAll('td');
@@ -30,8 +30,7 @@ function init(){
     }
     // Create the array object with display false, its coordinate, and value of bomb
     board = [];
-    var xcoor = 0;
-    var ycoor = 0;
+    xcoor = ycoor = 0;
     for(var i = 0; i < 64; i++){
         var eachSquare = {
             display: false,
@@ -48,8 +47,85 @@ function init(){
     randomBombs.forEach(function(el){
         board[el].value = 'bomb';
     });
+    checkNumberValue();
     console.log(board);
     render();
+}
+
+function checkNumberValue(){
+    board.forEach(function(square){
+        var numberOfBombs = 0;
+        if(!square.hasOwnProperty('value')){
+            xcoor = square.coor.x;
+            ycoor = square.coor.y;
+            var tempx, tempy;
+            // upper left
+            tempx = xcoor - 1;
+            tempy = ycoor - 1;
+            for(var i = 0; i < 64; i++){
+                if(board[i].coor.x === tempx && board[i].coor.y === tempy){
+                    if (board[i].value === 'bomb') numberOfBombs++;
+                }
+            } 
+            // upper middle
+            tempx = xcoor;
+            tempy = ycoor - 1;
+            for(var i = 0; i < 64; i++){
+                if(board[i].coor.x === tempx && board[i].coor.y === tempy){
+                    if (board[i].value === 'bomb') numberOfBombs++;
+                }
+            }
+            // upper right
+            tempx = xcoor + 1;
+            tempy = ycoor - 1;
+            for(var i = 0; i < 64; i++){
+                if(board[i].coor.x === tempx && board[i].coor.y === tempy){
+                    if (board[i].value === 'bomb') numberOfBombs++;
+                }
+            }
+            // middle right
+            tempx = xcoor + 1;
+            tempy = ycoor;
+            for(var i = 0; i < 64; i++){
+                if(board[i].coor.x === tempx && board[i].coor.y === tempy){
+                    if (board[i].value === 'bomb') numberOfBombs++;
+                }
+            }
+            // lower right
+            tempx = xcoor + 1;
+            tempy = ycoor + 1;
+            for(var i = 0; i < 64; i++){
+                if(board[i].coor.x === tempx && board[i].coor.y === tempy){
+                    if (board[i].value === 'bomb') numberOfBombs++;
+                }
+            }
+            // lower middle
+            tempx = xcoor;
+            tempy = ycoor + 1;
+            for(var i = 0; i < 64; i++){
+                if(board[i].coor.x === tempx && board[i].coor.y === tempy){
+                    if (board[i].value === 'bomb') numberOfBombs++;
+                }
+            }
+            // lower left
+            tempx = xcoor - 1;
+            tempy = ycoor + 1;
+            for(var i = 0; i < 64; i++){
+                if(board[i].coor.x === tempx && board[i].coor.y === tempy){
+                    if (board[i].value === 'bomb') numberOfBombs++;
+                }
+            }
+            // middle left
+            tempx = xcoor - 1;
+            tempy = ycoor;
+            for(var i = 0; i < 64; i++){
+                if(board[i].coor.x === tempx && board[i].coor.y === tempy){
+                    if (board[i].value === 'bomb') numberOfBombs++;
+                }
+            }
+            square.value = numberOfBombs;   
+        }
+    });
 }
 
 function handleSquareClick(evt){
@@ -61,6 +137,10 @@ function render(){
     board.forEach(function(el, index){
         if(el.value === 'bomb'){
             squares[index].innerHTML = '<i class="fa fa-bomb" aria-hidden="true"></i>';
-        }
+        } else if (!el.value) {
+            squares[index].textContent = '';
+        } else {
+            squares[index].textContent = el.value;
+        } 
     });
 }
