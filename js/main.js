@@ -4,22 +4,20 @@ $(function(){
 var board, randomBombs, xcoor, ycoor;
 
 /*----- cached element references -----*/
-var squares = document.querySelectorAll('td');
+var $squares = $('td');
+var $body = $('body');
 
 /*----- event listeners -----*/
-document.querySelector('tbody').addEventListener('click', handleSquareClick);
-document.querySelector('button').addEventListener('click', init);
+$('tbody').on('click', handleSquareClick);
+$('button').on('click', init);
 
 /*----- functions -----*/
 init();
 
 function init(){
     // Makes the square dark gray and clears all the bomb icons
-    squares.forEach(function(el){
-        el.classList.remove('clicked');
-        el.classList.add('unclicked');
-        el.innerHTML = '';
-    });
+    $squares.addClass('unclicked').removeClass('clicked').html('');
+    
     // Create an array with 10 indexes where the bombs are going
     randomBombs = [];
     for(var i = 0; i < 10; i++){
@@ -45,12 +43,12 @@ function init(){
             xcoor = 0;
         }
     }
-    console.log(randomBombs);
     randomBombs.forEach(function(el){
         board[el].value = 'bomb';
     });
     checkNumberValue();
-    console.log(board);
+    $body.css({background: 'white'});
+
     render();
 }
 
@@ -131,19 +129,30 @@ function checkNumberValue(){
 }
 
 function handleSquareClick(evt){
-    evt.target.classList.remove('unclicked');
-    evt.target.classList.add('clicked');
+    $(evt.target).removeClass('unclicked').addClass('clicked');
+    board[evt.target.id].display = true;
+    render();
 }
 
 function render(){
     board.forEach(function(el, index){
-        if(el.value === 'bomb'){
-            squares[index].innerHTML = '<i class="fa fa-bomb" aria-hidden="true"></i>';
-        } else if (!el.value) {
-            squares[index].textContent = '';
-        } else {
-            squares[index].textContent = el.value;
-        } 
+        if(el.display){
+            if(el.value === 'bomb'){ // it the user clicks on the bomb, it will show all the bombs
+                randomBombs.forEach(function(el){
+                    $squares.eq(el).html('<i class="fa fa-bomb" aria-hidden="true"></i>');
+                });
+                
+            } else if (!el.value) {
+                $squares.eq(index).text('');
+            } else {
+                $squares.eq(index).text(el.value);
+            } 
+       }
+        
+        // if the user clicks on the bomb, it will turn the background red
+        if(el.display && el.value === 'bomb'){
+            $body.css({background: 'red'});
+        }
     });
 }
 
@@ -156,3 +165,13 @@ Flag
 Question mark
 <i class="fa fa-question" aria-hidden="true"></i>
 */
+
+/*
+ if(el.value === 'bomb'){
+            $squares.eq(index).html('<i class="fa fa-bomb" aria-hidden="true"></i>');
+        } else if (!el.value) {
+            $squares.eq(index).text('');
+        } else {
+            $squares.eq(index).text(el.value);
+        } 
+        */
