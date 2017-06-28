@@ -1,3 +1,5 @@
+$(function(){
+
 /*----- app's state (variables) -----*/
 var board, randomBombs, xcoor, ycoor;
 
@@ -144,6 +146,9 @@ function render(){
         } 
     });
 }
+
+
+});
 
 /*
 Flag
