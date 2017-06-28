@@ -144,3 +144,10 @@ function render(){
         } 
     });
 }
+
+/*
+Flag
+<i class="fa fa-flag" aria-hidden="true"></i>
+Question mark
+<i class="fa fa-question" aria-hidden="true"></i>
+*/
