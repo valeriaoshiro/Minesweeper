@@ -129,8 +129,10 @@ function checkNumberValue(){
 }
 
 function handleSquareClick(evt){
-    $(evt.target).removeClass('unclicked').addClass('clicked');
-    board[evt.target.id].display = true;
+    // $(evt.target).removeClass('unclicked').addClass('clicked');
+    // board[evt.target.id].display = true;
+    console.log('clicked');
+    openArea(board[evt.target.id].coor.x, board[evt.target.id].coor.y);
     render();
 }
 
@@ -147,6 +149,7 @@ function render(){
             } else {
                 $squares.eq(index).text(el.value);
             } 
+            $squares.eq(index).addClass('clicked').removeClass('unclicked');
        }
         
         // if the user clicks on the bomb, it will turn the background red
@@ -155,6 +158,38 @@ function render(){
         }
     });
 }
+
+function openArea(x, y){
+    board.forEach(function(square){
+        // base case
+        if(square.coor.x === x && square.coor.y === y) {
+            if(square.display){return;}
+            if(square.value > 0 || square.value === 'bomb') {
+                square.display = true;
+                return;
+            } else {
+                square.display = true;
+                var tempxneg = x - 1;
+                var tempyneg = y - 1;
+                var tempxpos = x + 1;
+                var tempypos = y + 1;
+                openArea(tempxneg, tempyneg);   // upper left
+                openArea(x, tempyneg);          // upper middle
+                openArea(tempxpos, tempyneg);   // upper right
+                openArea(tempxpos, y);          // middle right
+                openArea(tempxpos, tempypos);   // lower right
+                openArea(x, tempypos);          // lower middle
+                openArea(tempxneg, tempypos);   // lower left
+                openArea(tempxneg, y);          // middle left
+                
+            }
+        } 
+    });
+
+
+        
+}
+
 
 
 });
