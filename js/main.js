@@ -6,10 +6,11 @@ var board, randomBombs, xcoor, ycoor;
 /*----- cached element references -----*/
 var $squares = $('td');
 var $body = $('body');
+var $resetButton = $('button');
 
 /*----- event listeners -----*/
 $('tbody').on('click', handleSquareClick);
-$('button').on('click', init);
+$resetButton.on('click', init);
 
 /*----- functions -----*/
 init();
@@ -17,6 +18,9 @@ init();
 function init(){
     // Makes the square dark gray and clears all the bomb icons
     $squares.addClass('unclicked').removeClass('clicked').html('');
+
+    // Reset button will be a happy face
+    $resetButton.html('<i class="fa fa-smile-o" aria-hidden="true"></i>');
     
     // Create an array with 10 indexes where the bombs are going
     randomBombs = [];
@@ -129,9 +133,6 @@ function checkNumberValue(){
 }
 
 function handleSquareClick(evt){
-    // $(evt.target).removeClass('unclicked').addClass('clicked');
-    // board[evt.target.id].display = true;
-    console.log('clicked');
     openArea(board[evt.target.id].coor.x, board[evt.target.id].coor.y);
     render();
 }
@@ -152,9 +153,11 @@ function render(){
             $squares.eq(index).addClass('clicked').removeClass('unclicked');
        }
         
-        // if the user clicks on the bomb, it will turn the background red
+        // if the user clicks on the bomb, it will turn the background red, reset button will be sad
         if(el.display && el.value === 'bomb'){
             $body.css({background: 'red'});
+            $resetButton.html('');
+            $resetButton.html('<i class="fa fa-frown-o" aria-hidden="true"></i>');
         }
     });
 }
@@ -199,6 +202,10 @@ Flag
 <i class="fa fa-flag" aria-hidden="true"></i>
 Question mark
 <i class="fa fa-question" aria-hidden="true"></i>
+Happy face
+<i class="fa fa-smile-o" aria-hidden="true"></i>
+Sad face
+<i class="fa fa-frown-o" aria-hidden="true"></i>
 */
 
 /*
