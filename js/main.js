@@ -167,7 +167,7 @@ function render(){
         
         // if the user clicks on the bomb, it will turn the background red, reset button will be sad
         if(el.display && el.value === 'bomb'){
-            $body.css({background: 'red'});
+            $body.css({background: '#ff6961'});
             $resetButton.html('');
             $resetButton.html('<i class="fa fa-frown-o" aria-hidden="true"></i>');
             $('tbody').off('click', 'td', handleSquareClick);
@@ -185,21 +185,22 @@ function render(){
         tdClicked = '';
     }
 
-    // checkWinner();
-    // if(isWinner === 54){
-    //     $body.css({background: 'green'});
-    //     $resetButton.html('');
-    //     $resetButton.html('<i class="fa fa-trophy" aria-hidden="true"></i>');
-    // }
+    checkWinner();
+    if(isWinner === 54){
+        $body.css({background: '#a0e7a0'});
+        $resetButton.html('');
+        $resetButton.html('<i class="fa fa-trophy" aria-hidden="true"></i>');
+    }
 }
 
-// function checkWinner(){
-//     board.forEach(function(el){
-//         if(el.display && el.value !== 'bomb'){
-//             isWinner++;
-//         }
-//     });
-// }
+function checkWinner(){
+    isWinner = 0;
+    board.forEach(function(el){
+        if(el.display && el.value !== 'bomb'){
+            isWinner++;
+        }
+    });
+}
 
 function openArea(x, y){
     board.forEach(function(square, idx){
@@ -248,6 +249,10 @@ Sad face
 <i class="fa fa-frown-o" aria-hidden="true"></i>
 Trophy
 <i class="fa fa-trophy" aria-hidden="true"></i>
+
+green
+#a0e7a0
+
 */
  
  // need to check if user has won, and display green background and trophy icon
