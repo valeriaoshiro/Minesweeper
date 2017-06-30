@@ -3,10 +3,16 @@
     margin: 0;
     padding: 0;
     border: none;
+    font-family: 'Raleway', sans-serif;
 }
 
 body {
-    margin-top: 10%;
+    margin-top: 3%;
+}
+
+h1 {
+    text-align: center;
+    margin: 3% 0;
 }
 
 #container {
@@ -24,7 +30,6 @@ body {
     text-align: center;
     color: black;
     background: #BDC3C7;
-    font-family: 'Orbitron', sans-serif;
     font-size: 1.5em;
     padding: 5px 10px;
     height: 50px;
@@ -79,3 +84,18 @@ td {
     -webkit-user-select: none;
 }
 
+#info {
+    /*width: 800px;*/
+    margin: 50px auto;
+    text-align: center;
+}
+
+a {
+    margin: 0 3%;
+    color: black;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
