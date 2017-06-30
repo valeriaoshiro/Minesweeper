@@ -1,12 +1,14 @@
 $(function(){
 
 /*----- app's state (variables) -----*/
-var board, randomBombs, xcoor, ycoor, isWinner, tdClicked;
+var board, randomBombs, xcoor, ycoor, isWinner, tdClicked, bombsLeft, timePassed, firstClick, intervalId;
 
 /*----- cached element references -----*/
 var $squares = $('td');
 var $body = $('body');
 var $resetButton = $('button');
+var $bombsLeftDisplay = $('#bombsLeft');
+var $timePassedDisplay = $('#timePassed');
 
 /*----- event listeners -----*/
 // $('tbody').on('click', 'td', handleSquareClick);
@@ -18,6 +20,10 @@ init();
 function init(){
     $('tbody').on('click', 'td', handleSquareClick);
     tdClicked = '';
+    bombsLeft = 10;
+    timePassed = 0;
+    firstClick = true;
+    $timePassedDisplay.val('0');
 
     // Makes the square dark gray and clears all the bomb icons
     $squares.addClass('unclicked').removeClass('clicked').html('');
@@ -25,6 +31,7 @@ function init(){
     // Reset button will be a happy face
     $resetButton.html('<i class="fa fa-smile-o" aria-hidden="true"></i>');
     
+
     // Create an array with 10 indexes where the bombs are going
     randomBombs = [];
     for(var i = 0; i < 10; i++){
@@ -136,6 +143,10 @@ function checkNumberValue(){
 }
 
 function handleSquareClick(evt){
+    if(firstClick) {
+        firstClick = false;
+        intervalId = setInterval(countTimer, 1000);
+    }    
     if (evt.shiftKey) {
         tdClicked = evt.currentTarget;
     } else {
@@ -147,6 +158,7 @@ function handleSquareClick(evt){
 }
 function handleResetClick(evt){
     $('tbody').off('click', 'td', handleSquareClick);
+    clearInterval(intervalId);
     init();
 }
 
@@ -157,6 +169,7 @@ function render(){
                 randomBombs.forEach(function(el){
                     $squares.eq(el).html('<i class="fa fa-bomb" aria-hidden="true"></i>');
                 });
+                clearInterval(intervalId);
             } else if (!el.value) { // if it doesn't have any value, nothing shows
                 $squares.eq(index).text('');
             } else {
@@ -178,9 +191,11 @@ function render(){
     // checks if the user has shift+clicked. If so, it toggles between flag or empty
     if(tdClicked) {
         if(tdClicked.innerHTML === ""){
+            bombsLeft--;
             tdClicked.innerHTML = '<i class="fa fa-flag" aria-hidden="true"></i>';
         } else {
             tdClicked.innerHTML = "";
+            bombsLeft++;
         }
         tdClicked = '';
     }
@@ -190,7 +205,10 @@ function render(){
         $body.css({background: '#a0e7a0'});
         $resetButton.html('');
         $resetButton.html('<i class="fa fa-trophy" aria-hidden="true"></i>');
+        clearInterval(intervalId);
     }
+
+    $bombsLeftDisplay.val(bombsLeft);
 }
 
 function checkWinner(){
@@ -228,12 +246,20 @@ function openArea(x, y){
                 
             }
         } 
-    });
-
-
-        
+    });   
 }
 
+function countTimer(){
+    ++timePassed;
+    $timePassedDisplay.val(timePassed);
+    if(timePassed === 999){
+        $body.css({background: '#ff6961'});
+        $resetButton.html('');
+        $resetButton.html('<i class="fa fa-frown-o" aria-hidden="true"></i>');
+        $('tbody').off('click', 'td', handleSquareClick);
+        clearInterval(intervalId);
+    }
+}
 
 
 });

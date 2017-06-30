@@ -31,3 +31,9 @@ td {
     height: 30px;
     text-align: center;
 }
+
+#bombsLeft, #timePassed {
+    text-align: center;
+    color: red;
+    font-family: 'Orbitron', sans-serif;
+}
