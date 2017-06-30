@@ -137,10 +137,8 @@ function checkNumberValue(){
 
 function handleSquareClick(evt){
     if (evt.shiftKey) {
-        console.log('Inside of shift handleClick');
         tdClicked = evt.currentTarget;
     } else {
-        console.log('Inside of regular handleClick');
         if(evt.currentTarget.innerHTML === ""){
             openArea(board[evt.target.id].coor.x, board[evt.target.id].coor.y);
         }
@@ -159,10 +157,10 @@ function render(){
                 randomBombs.forEach(function(el){
                     $squares.eq(el).html('<i class="fa fa-bomb" aria-hidden="true"></i>');
                 });
-            } else if (!el.value) {
+            } else if (!el.value) { // if it doesn't have any value, nothing shows
                 $squares.eq(index).text('');
             } else {
-                $squares.eq(index).text(el.value);
+                $squares.eq(index).text(el.value); // else, show the number
             } 
             $squares.eq(index).addClass('clicked').removeClass('unclicked');
        }
@@ -176,6 +174,8 @@ function render(){
 
         }
     });
+
+    // checks if the user has shift+clicked. If so, it toggles between flag or empty
     if(tdClicked) {
         if(tdClicked.innerHTML === ""){
             tdClicked.innerHTML = '<i class="fa fa-flag" aria-hidden="true"></i>';
@@ -185,27 +185,28 @@ function render(){
         tdClicked = '';
     }
 
-    checkWinner();
-    if(isWinner === 54){
-        $body.css({background: 'green'});
-        $resetButton.html('');
-        $resetButton.html('<i class="fa fa-trophy" aria-hidden="true"></i>');
-    }
+    // checkWinner();
+    // if(isWinner === 54){
+    //     $body.css({background: 'green'});
+    //     $resetButton.html('');
+    //     $resetButton.html('<i class="fa fa-trophy" aria-hidden="true"></i>');
+    // }
 }
 
-function checkWinner(){
-    board.forEach(function(el){
-        if(el.display && el.value !== 'bomb'){
-            isWinner++;
-        }
-    });
-}
+// function checkWinner(){
+//     board.forEach(function(el){
+//         if(el.display && el.value !== 'bomb'){
+//             isWinner++;
+//         }
+//     });
+// }
 
 function openArea(x, y){
-    board.forEach(function(square){
-        // base case
+    board.forEach(function(square, idx){
         if(square.coor.x === x && square.coor.y === y) {
+            // base case
             if(square.display){return;}
+            if($squares[idx].innerHTML){return;}
             if(square.value > 0 || square.value === 'bomb') {
                 square.display = true;
                 return;
