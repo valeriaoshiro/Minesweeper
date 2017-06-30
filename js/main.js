@@ -1,7 +1,7 @@
 $(function(){
 
 /*----- app's state (variables) -----*/
-var board, randomBombs, xcoor, ycoor, isWinner;
+var board, randomBombs, xcoor, ycoor, isWinner, tdClicked;
 
 /*----- cached element references -----*/
 var $squares = $('td');
@@ -9,13 +9,16 @@ var $body = $('body');
 var $resetButton = $('button');
 
 /*----- event listeners -----*/
-$('tbody td').on('click', handleSquareClick);
-$resetButton.on('click', init);
+// $('tbody').on('click', 'td', handleSquareClick);
+$resetButton.on('click', handleResetClick);
 
 /*----- functions -----*/
 init();
 
 function init(){
+    $('tbody').on('click', 'td', handleSquareClick);
+    tdClicked = '';
+
     // Makes the square dark gray and clears all the bomb icons
     $squares.addClass('unclicked').removeClass('clicked').html('');
 
@@ -36,11 +39,11 @@ function init(){
     board = [];
     xcoor = ycoor = 0;
     for(var i = 0; i < 64; i++){
-        var eachSquare = {
+        var square = {
             display: false,
             coor: {x: xcoor, y: ycoor}
         };
-        board.push(eachSquare);
+        board.push(square);
         xcoor++;
         if(xcoor > 7){
             ycoor++;
@@ -134,20 +137,19 @@ function checkNumberValue(){
 
 function handleSquareClick(evt){
     if (evt.shiftKey) {
-        if(evt.currentTarget.innerHTML === ""){
-            evt.currentTarget.innerHTML = '<i class="fa fa-flag" aria-hidden="true"></i>';
-        } else if(evt.currentTarget.innerHTML === '<i class="fa fa-flag" aria-hidden="true"></i>'){
-            evt.currentTarget.innerHTML = "";
-            evt.currentTarget.innerHTML = '<i class="fa fa-question" aria-hidden="true"></i>';
-        } else {
-            evt.currentTarget.innerHTML = "";
-        }
-
+        console.log('Inside of shift handleClick');
+        tdClicked = evt.currentTarget;
     } else {
-        openArea(board[evt.target.id].coor.x, board[evt.target.id].coor.y);
-
+        console.log('Inside of regular handleClick');
+        if(evt.currentTarget.innerHTML === ""){
+            openArea(board[evt.target.id].coor.x, board[evt.target.id].coor.y);
+        }
     }
     render();
+}
+function handleResetClick(evt){
+    $('tbody').off('click', 'td', handleSquareClick);
+    init();
 }
 
 function render(){
@@ -170,8 +172,19 @@ function render(){
             $body.css({background: 'red'});
             $resetButton.html('');
             $resetButton.html('<i class="fa fa-frown-o" aria-hidden="true"></i>');
+            $('tbody').off('click', 'td', handleSquareClick);
+
         }
     });
+    if(tdClicked) {
+        if(tdClicked.innerHTML === ""){
+            tdClicked.innerHTML = '<i class="fa fa-flag" aria-hidden="true"></i>';
+        } else {
+            tdClicked.innerHTML = "";
+        }
+        tdClicked = '';
+    }
+
     checkWinner();
     if(isWinner === 54){
         $body.css({background: 'green'});
