@@ -263,22 +263,3 @@ function countTimer(){
 
 
 });
-
-/*
-Flag
-<i class="fa fa-flag" aria-hidden="true"></i>
-Question mark
-<i class="fa fa-question" aria-hidden="true"></i>
-Happy face
-<i class="fa fa-smile-o" aria-hidden="true"></i>
-Sad face
-<i class="fa fa-frown-o" aria-hidden="true"></i>
-Trophy
-<i class="fa fa-trophy" aria-hidden="true"></i>
-
-green
-#a0e7a0
-
-*/
- 
- // need to check if user has won, and display green background and trophy icon
