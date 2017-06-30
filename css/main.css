@@ -6,6 +6,10 @@
     background: #ECF0F1;
 }
 
+button {
+    font-size: 1.5em;
+}
+
 table {
     border-collapse: collapse;
 }

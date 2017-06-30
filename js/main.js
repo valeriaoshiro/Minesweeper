@@ -1,7 +1,7 @@
 $(function(){
 
 /*----- app's state (variables) -----*/
-var board, randomBombs, xcoor, ycoor;
+var board, randomBombs, xcoor, ycoor, isWinner;
 
 /*----- cached element references -----*/
 var $squares = $('td');
@@ -9,7 +9,7 @@ var $body = $('body');
 var $resetButton = $('button');
 
 /*----- event listeners -----*/
-$('tbody').on('click', handleSquareClick);
+$('tbody td').on('click', handleSquareClick);
 $resetButton.on('click', init);
 
 /*----- functions -----*/
@@ -52,7 +52,7 @@ function init(){
     });
     checkNumberValue();
     $body.css({background: 'white'});
-
+    isWinner = false;
     render();
 }
 
@@ -133,7 +133,20 @@ function checkNumberValue(){
 }
 
 function handleSquareClick(evt){
-    openArea(board[evt.target.id].coor.x, board[evt.target.id].coor.y);
+    if (evt.shiftKey) {
+        if(evt.currentTarget.innerHTML === ""){
+            evt.currentTarget.innerHTML = '<i class="fa fa-flag" aria-hidden="true"></i>';
+        } else if(evt.currentTarget.innerHTML === '<i class="fa fa-flag" aria-hidden="true"></i>'){
+            evt.currentTarget.innerHTML = "";
+            evt.currentTarget.innerHTML = '<i class="fa fa-question" aria-hidden="true"></i>';
+        } else {
+            evt.currentTarget.innerHTML = "";
+        }
+
+    } else {
+        openArea(board[evt.target.id].coor.x, board[evt.target.id].coor.y);
+
+    }
     render();
 }
 
@@ -144,7 +157,6 @@ function render(){
                 randomBombs.forEach(function(el){
                     $squares.eq(el).html('<i class="fa fa-bomb" aria-hidden="true"></i>');
                 });
-                
             } else if (!el.value) {
                 $squares.eq(index).text('');
             } else {
@@ -158,6 +170,20 @@ function render(){
             $body.css({background: 'red'});
             $resetButton.html('');
             $resetButton.html('<i class="fa fa-frown-o" aria-hidden="true"></i>');
+        }
+    });
+    checkWinner();
+    if(isWinner === 54){
+        $body.css({background: 'green'});
+        $resetButton.html('');
+        $resetButton.html('<i class="fa fa-trophy" aria-hidden="true"></i>');
+    }
+}
+
+function checkWinner(){
+    board.forEach(function(el){
+        if(el.display && el.value !== 'bomb'){
+            isWinner++;
         }
     });
 }
@@ -206,14 +232,8 @@ Happy face
 <i class="fa fa-smile-o" aria-hidden="true"></i>
 Sad face
 <i class="fa fa-frown-o" aria-hidden="true"></i>
+Trophy
+<i class="fa fa-trophy" aria-hidden="true"></i>
 */
-
-/*
- if(el.value === 'bomb'){
-            $squares.eq(index).html('<i class="fa fa-bomb" aria-hidden="true"></i>');
-        } else if (!el.value) {
-            $squares.eq(index).text('');
-        } else {
-            $squares.eq(index).text(el.value);
-        } 
-        */
+ 
+ // need to check if user has won, and display green background and trophy icon
