@@ -21,3 +21,6 @@ HTML, CSS, JavaScript, jQuery, and git for version control.
 ## Getting started:
 Click here to play the game
 
+## Next steps:
+Will impletement an easy button for 8x8 board and a hard button for a 16x16 board
+
