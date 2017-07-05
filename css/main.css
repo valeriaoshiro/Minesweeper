@@ -15,38 +15,58 @@ h1 {
     margin: 3% 0;
 }
 
-#container {
+#upperContainer {
+    background: #ECF0F1;
+    width: 300px;
+    margin: 0 auto;
+    padding: 15px 0;
     display: flex;
     justify-content: space-around;
     align-items: center;
     border: 1px solid #7C8184;
-    width: 300px;
-    margin: 0 auto;
-    padding: 15px 0;
-    background: #ECF0F1;
 }
 
 #bombsLeft, #timePassed {
-    text-align: center;
-    color: black;
     background: #BDC3C7;
-    font-size: 1.5em;
-    padding: 5px 10px;
+    color: black;
     height: 50px;
+    padding: 5px 10px;
+    text-align: center;
+    font-size: 1.5em;
     border: 1px solid #7C8184;
 }
 
-button {
-    font-size: 1.5em;
-    padding: 5px;
+#resetButton {
+    background: #BDC3C7;
     width: 50px;
     height: 50px;
+    padding: 5px;
+    font-size: 1.5em;
     text-align: center;
-    background: #BDC3C7;
     border-right: 2px solid #7C8184;
     border-bottom: 2px solid #7C8184;
     border-top: 2px solid #E3E7EA;
     border-left: 2px solid #E3E7EA;
+}
+
+table {
+    background: #ECF0F1;
+    width: 300px;
+    margin: 0 auto;
+    border-collapse: separate;
+    border: 1px solid #7C8184;
+}
+
+td {
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    border: 1px solid #787e82;
+    /* Prevents selecting when the user uses shift+click */
+    user-select: none; /* CSS3 (little to no support) */
+    -ms-user-select: none; /* IE 10+ */
+    -moz-user-select: none; /* Gecko (Firefox) */
+    -webkit-user-select: none;
 }
 
 .unclicked {
@@ -61,37 +81,12 @@ button {
     background: #ECF0F1;
 }
 
-button {
-    font-size: 1.5em;
-}
-
-table {
-    border-collapse: separate;
-    background: #ECF0F1;
-    margin: 0 auto;
-    width: 300px;
-    border: 1px solid #7C8184;
-}
-
-td {
-    border: 1px solid #787e82;
-    width: 30px;
-    height: 30px;
-    text-align: center;
-            user-select: none; /* CSS3 (little to no support) */
-        -ms-user-select: none; /* IE 10+ */
-       -moz-user-select: none; /* Gecko (Firefox) */
-    -webkit-user-select: none;
-}
-
 #info {
-    /*width: 800px;*/
     margin: 50px auto;
     text-align: center;
 }
 
 a {
-    margin: 0 3%;
     color: black;
     text-decoration: none;
 }
