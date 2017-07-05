@@ -2,6 +2,10 @@
 
 The objective of the game is to clear the board without revealing any mines.
 
+### Game modes:
+* Easy: The board is 8x8 with 10 mines
+* Hard: The board is 16x16 with 40 mines
+
 ### Status of the board:
 * The upper left number indicates how many mines are left to find.
 * The upper middle button is to reset the game.
@@ -22,5 +26,5 @@ HTML, CSS, JavaScript, jQuery, and git for version control.
 Click here to play the game
 
 ## Next steps:
-Will impletement an easy button for 8x8 board with 10 mines and a hard button for a 16x16 board with 40 mines.
+Will implemement an expert button for 16x30 board with 99 mines.
 
