@@ -1,17 +1,16 @@
 $(function(){
 
 /*----- app's state (variables) -----*/
-var board, randomBombs, xcoor, ycoor, isWinner, tdClicked, bombsLeft, timePassed, firstClick, intervalId;
+var board, randomBombs, xcoor, ycoor, sumOfWinningSquares, tdDisplayContent, bombsLeft, timePassed, firstClick, timerId;
 
 /*----- cached element references -----*/
 var $squares = $('td');
 var $body = $('body');
-var $resetButton = $('button');
+var $resetButton = $('#resetButton');
 var $bombsLeftDisplay = $('#bombsLeft');
 var $timePassedDisplay = $('#timePassed');
 
 /*----- event listeners -----*/
-// $('tbody').on('click', 'td', handleSquareClick);
 $resetButton.on('click', handleResetClick);
 
 /*----- functions -----*/
@@ -19,30 +18,32 @@ init();
 
 function init(){
     $('tbody').on('click', 'td', handleSquareClick);
-    tdClicked = '';
+
+    $body.css({background: 'white'});
+    sumOfWinningSquares = 0;
+    tdDisplayContent = '';
     bombsLeft = 10;
     timePassed = 0;
     firstClick = true;
-    $timePassedDisplay.val('0');
+    $timePassedDisplay.val(timePassed);
 
     // Makes the square dark gray and clears all the bomb icons
     $squares.addClass('unclicked').removeClass('clicked').html('');
 
     // Reset button will be a happy face
     $resetButton.html('<i class="fa fa-smile-o" aria-hidden="true"></i>');
-    
 
     // Create an array with 10 indexes where the bombs are going
     randomBombs = [];
     for(var i = 0; i < 10; i++){
-        var random = Math.floor(Math.random()*64);
-        if(!randomBombs.includes(random)){
+        var random = Math.floor(Math.random() * 64);
+        if(!randomBombs.includes(random)){      // if the array doesn't have the same numbere, push
             randomBombs.push(random);
-        } else {
+        } else {                                // else, decrease i to get a new number
             i--;
         }
     }
-    // Create the array object with display false, its coordinate, and value of bomb
+    // Create the array that holds objects with display false and its coordinate
     board = [];
     xcoor = ycoor = 0;
     for(var i = 0; i < 64; i++){
@@ -57,19 +58,22 @@ function init(){
             xcoor = 0;
         }
     }
+    
+    // Add the value of bomb to the board
     randomBombs.forEach(function(el){
         board[el].value = 'bomb';
     });
-    checkNumberValue();
-    $body.css({background: 'white'});
-    isWinner = false;
+
+    // Add the number of surrounding bombs
+    addNumberValue();
+
     render();
 }
 
-function checkNumberValue(){
+function addNumberValue(){
     board.forEach(function(square){
         var numberOfBombs = 0;
-        if(!square.hasOwnProperty('value')){
+        if(!square.hasOwnProperty('value')){    // if the square is empty add a number
             xcoor = square.coor.x;
             ycoor = square.coor.y;
             var tempx, tempy;
@@ -143,79 +147,81 @@ function checkNumberValue(){
 }
 
 function handleSquareClick(evt){
-    if(firstClick) {
+    // if it's the first click, start counter
+    if(firstClick) { 
         firstClick = false;
-        intervalId = setInterval(countTimer, 1000);
+        timerId = setInterval(countTimer, 1000);
     }    
-    if (evt.shiftKey) {
-        tdClicked = evt.currentTarget;
-    } else {
-        if(evt.currentTarget.innerHTML === ""){
+
+    
+    if (evt.shiftKey) {         // if shift+click
+        tdDisplayContent = evt.currentTarget;
+    } else {                    // else regular click
+        if(evt.currentTarget.innerHTML === ''){ // if it doesn't have a flag on square, continue (cannot open a square if it has a flag)
             openArea(board[evt.target.id].coor.x, board[evt.target.id].coor.y);
         }
     }
+
     render();
 }
+
 function handleResetClick(evt){
     $('tbody').off('click', 'td', handleSquareClick);
-    clearInterval(intervalId);
+    clearInterval(timerId);
     init();
 }
 
 function render(){
     board.forEach(function(el, index){
         if(el.display){
-            if(el.value === 'bomb'){ // it the user clicks on the bomb, it will show all the bombs
+            if(el.value === 'bomb'){            // if the user clicks on the bomb, it will show all the bombs
                 randomBombs.forEach(function(el){
                     $squares.eq(el).html('<i class="fa fa-bomb" aria-hidden="true"></i>');
                 });
-                clearInterval(intervalId);
-            } else if (!el.value) { // if it doesn't have any value, nothing shows
+                $body.css({background: '#ff6961'});
+                $resetButton.html('');
+                $resetButton.html('<i class="fa fa-frown-o" aria-hidden="true"></i>');
+                $('tbody').off('click', 'td', handleSquareClick);
+                clearInterval(timerId);
+            } else if (!el.value) {             // if the suer clicks on empty square, shows nothing
                 $squares.eq(index).text('');
-            } else {
-                $squares.eq(index).text(el.value); // else, show the number
+            } else {                            // else, show the number
+                $squares.eq(index).text(el.value); 
             } 
             $squares.eq(index).addClass('clicked').removeClass('unclicked');
        }
-        
-        // if the user clicks on the bomb, it will turn the background red, reset button will be sad
-        if(el.display && el.value === 'bomb'){
-            $body.css({background: '#ff6961'});
-            $resetButton.html('');
-            $resetButton.html('<i class="fa fa-frown-o" aria-hidden="true"></i>');
-            $('tbody').off('click', 'td', handleSquareClick);
-
-        }
     });
 
     // checks if the user has shift+clicked. If so, it toggles between flag or empty
-    if(tdClicked) {
-        if(tdClicked.innerHTML === ""){
+    if(tdDisplayContent) {
+        if(tdDisplayContent.innerHTML === ''){
             bombsLeft--;
-            tdClicked.innerHTML = '<i class="fa fa-flag" aria-hidden="true"></i>';
+            tdDisplayContent.innerHTML = '<i class="fa fa-flag" aria-hidden="true"></i>';
         } else {
-            tdClicked.innerHTML = "";
+            tdDisplayContent.innerHTML = '';
             bombsLeft++;
         }
-        tdClicked = '';
+        tdDisplayContent = '';
     }
+    
+    // update the number of bombs left
+    $bombsLeftDisplay.val(bombsLeft);
 
     checkWinner();
-    if(isWinner === 54){
+    if(sumOfWinningSquares === 54){
         $body.css({background: '#a0e7a0'});
         $resetButton.html('');
         $resetButton.html('<i class="fa fa-trophy" aria-hidden="true"></i>');
-        clearInterval(intervalId);
+        $('tbody').off('click', 'td', handleSquareClick);
+        clearInterval(timerId);
     }
-
-    $bombsLeftDisplay.val(bombsLeft);
 }
 
 function checkWinner(){
-    isWinner = 0;
+    sumOfWinningSquares = 0;
     board.forEach(function(el){
         if(el.display && el.value !== 'bomb'){
-            isWinner++;
+            sumOfWinningSquares++;
         }
     });
 }
@@ -224,12 +230,12 @@ function openArea(x, y){
     board.forEach(function(square, idx){
         if(square.coor.x === x && square.coor.y === y) {
             // base case
-            if(square.display){return;}
-            if($squares[idx].innerHTML){return;}
-            if(square.value > 0 || square.value === 'bomb') {
+            if(square.display){return;}                         // if it has already been clicked, return
+            if($squares[idx].innerHTML){return;}                // if it has a flag, return
+            if(square.value > 0 || square.value === 'bomb') {   // if it's a number or bomb, show it
                 square.display = true;
                 return;
-            } else {
+            } else {                                            // else, it's an open space, check for adjacent spaces
                 square.display = true;
                 var tempxneg = x - 1;
                 var tempyneg = y - 1;
@@ -252,12 +258,12 @@ function openArea(x, y){
 function countTimer(){
     ++timePassed;
     $timePassedDisplay.val(timePassed);
-    if(timePassed === 999){
+    if(timePassed === 999){     // if the user has run out of time, game over
         $body.css({background: '#ff6961'});
         $resetButton.html('');
         $resetButton.html('<i class="fa fa-frown-o" aria-hidden="true"></i>');
         $('tbody').off('click', 'td', handleSquareClick);
-        clearInterval(intervalId);
+        clearInterval(timerId);
     }
 }
 
