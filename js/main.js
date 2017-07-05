@@ -30,11 +30,14 @@ function init(){
         boardSizeX = 8;
         boardSizeTotal = 64;
         numToWin = 54;
+        $('.upperContainer').css({width: '220px'});
+        $bombsLeftDisplay.css({padding: '5px 3px;'});
     } else if(gameMode === 'hard'){
         bombsLeft = 40;
         boardSizeX = 16;
         boardSizeTotal = 256;
         numToWin = 216;
+        $('.upperContainer').css({width: '435px'});
     }
 
     $body.css({background: 'white'});
@@ -188,6 +191,7 @@ function handleSquareClick(evt){
     
     if (evt.shiftKey) {         // if shift+click
         tdDisplayContent = evt.currentTarget;
+        console.log(tdDisplayContent);
     } else {                    // else regular click
         if(evt.currentTarget.innerHTML === ''){ // if it doesn't have a flag on square, continue (cannot open a square if it has a flag)
             openArea(board[evt.target.id].coor.x, board[evt.target.id].coor.y);
@@ -202,6 +206,7 @@ function handleEasyClick(){
     $easyButton.addClass('modeSelected');
     $hardButton.removeClass('modeSelected');
     clearInterval(timerId);
+    $tbody.off('click', 'td', handleSquareClick);
     init();
 }
 
@@ -210,6 +215,7 @@ function handleHardClick(){
     $hardButton.addClass('modeSelected');
     $easyButton.removeClass('modeSelected');
     clearInterval(timerId);
+    $tbody.off('click', 'td', handleSquareClick);
     init();
 }
 
