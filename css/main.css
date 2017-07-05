@@ -7,7 +7,7 @@
 }
 
 body {
-    margin-top: 3%;
+    /*margin-top: 3%;*/
 }
 
 h1 {
@@ -82,7 +82,7 @@ h1 {
 
 table {
     background: #ECF0F1;
-    width: 300px;
+    /*width: 300px;*/
     margin: 0 auto;
     border-collapse: separate;
     border: 1px solid #7C8184;

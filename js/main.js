@@ -17,6 +17,8 @@ var $hardButton = $('#hard');
 
 /*----- event listeners -----*/
 $resetButton.on('click', handleResetClick);
+$easyButton.on('click', handleEasyClick);
+$hardButton.on('click', handleHardClick);
 
 /*----- functions -----*/
 init();
@@ -183,7 +185,6 @@ function handleSquareClick(evt){
         firstClick = false;
         timerId = setInterval(countTimer, 1000);
     }    
-
     
     if (evt.shiftKey) {         // if shift+click
         tdDisplayContent = evt.currentTarget;
@@ -196,6 +197,22 @@ function handleSquareClick(evt){
     render();
 }
 
+function handleEasyClick(){
+    gameMode = 'easy';
+    $easyButton.addClass('modeSelected');
+    $hardButton.removeClass('modeSelected');
+    clearInterval(timerId);
+    init();
+}
+
+function handleHardClick(){
+    gameMode = 'hard';
+    $hardButton.addClass('modeSelected');
+    $easyButton.removeClass('modeSelected');
+    clearInterval(timerId);
+    init();
+}
+
 function handleResetClick(evt){
     $tbody.off('click', 'td', handleSquareClick);
     clearInterval(timerId);
@@ -203,10 +220,6 @@ function handleResetClick(evt){
 }
 
 function render(){
-    if(gameMode === 'easy'){
-        $easyButton.addClass('modeSelected');
-    }
-
     board.forEach(function(el, index){
         if(el.display){
             if(el.value === 'bomb'){            // if the user clicks on the bomb, it will show all the bombs
