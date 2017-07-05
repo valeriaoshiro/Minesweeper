@@ -6,7 +6,8 @@ var board, randomBombs, xcoor, ycoor, sumOfWinningSquares, tdDisplayContent, bom
 var gameMode = 'easy';
 
 /*----- cached element references -----*/
-var $squares = $('td');
+var $tbody = $('tbody');
+var $squares;
 var $body = $('body');
 var $resetButton = $('#resetButton');
 var $bombsLeftDisplay = $('#bombsLeft');
@@ -21,16 +22,18 @@ $resetButton.on('click', handleResetClick);
 init();
 
 function init(){
-    $('tbody').on('click', 'td', handleSquareClick);
 
     if(gameMode === 'easy') {
         bombsLeft = 10;
         boardSizeX = 8;
         boardSizeTotal = 64;
         numToWin = 54;
-
+    } else if(gameMode === 'hard'){
+        bombsLeft = 40;
+        boardSizeX = 16;
+        boardSizeTotal = 256;
+        numToWin = 216;
     }
-
 
     $body.css({background: 'white'});
     sumOfWinningSquares = 0;
@@ -38,6 +41,22 @@ function init(){
     timePassed = 0;
     firstClick = true;
     $timePassedDisplay.val(timePassed);
+
+    // render initial table with tr, td and their ids
+    var rows = 0;
+    var idTemp = 0;
+    $tbody.html('');
+    while(rows < boardSizeX){
+        var $trTemp = $('<tr></tr>');
+        for(var i = 0; i < boardSizeX; i++){
+            $trTemp.append('<td id=' + idTemp + '></td>');
+            idTemp++;
+        }
+        rows++;
+        $tbody.append($trTemp);
+    }
+    $squares = $('td');
+    $tbody.on('click', 'td', handleSquareClick);
 
     // Makes the square dark gray and clears all the bomb icons
     $squares.addClass('unclicked').removeClass('clicked').html('');
@@ -178,7 +197,7 @@ function handleSquareClick(evt){
 }
 
 function handleResetClick(evt){
-    $('tbody').off('click', 'td', handleSquareClick);
+    $tbody.off('click', 'td', handleSquareClick);
     clearInterval(timerId);
     init();
 }
@@ -197,7 +216,7 @@ function render(){
                 $body.css({background: '#ff6961'});
                 $resetButton.html('');
                 $resetButton.html('<i class="fa fa-frown-o" aria-hidden="true"></i>');
-                $('tbody').off('click', 'td', handleSquareClick);
+                $tbody.off('click', 'td', handleSquareClick);
                 clearInterval(timerId);
             } else if (!el.value) {             // if the suer clicks on empty square, shows nothing
                 $squares.eq(index).text('');
@@ -228,7 +247,7 @@ function render(){
         $body.css({background: '#a0e7a0'});
         $resetButton.html('');
         $resetButton.html('<i class="fa fa-trophy" aria-hidden="true"></i>');
-        $('tbody').off('click', 'td', handleSquareClick);
+        $tbody.off('click', 'td', handleSquareClick);
         clearInterval(timerId);
     }
 }
@@ -247,7 +266,7 @@ function openArea(x, y){
         if(square.coor.x === x && square.coor.y === y) {
             // base case
             if(square.display){return;}                         // if it has already been clicked, return
-            if($squares[idx].innerHTML){return;}                // if it has a flag, return
+            if($squares[idx].innerHTML){return;}                   // if it has a flag, return
             if(square.value > 0 || square.value === 'bomb') {   // if it's a number or bomb, show it
                 square.display = true;
                 return;
@@ -278,7 +297,7 @@ function countTimer(){
         $body.css({background: '#ff6961'});
         $resetButton.html('');
         $resetButton.html('<i class="fa fa-frown-o" aria-hidden="true"></i>');
-        $('tbody').off('click', 'td', handleSquareClick);
+        $tbody.off('click', 'td', handleSquareClick);
         clearInterval(timerId);
     }
 }
