@@ -14,6 +14,7 @@ var $bombsLeftDisplay = $('#bombsLeft');
 var $timePassedDisplay = $('#timePassed');
 var $easyButton = $('#easy');
 var $hardButton = $('#hard');
+var $upperContainer = $('.upperContainer');
 
 /*----- event listeners -----*/
 $resetButton.on('click', handleResetClick);
@@ -24,28 +25,20 @@ $hardButton.on('click', handleHardClick);
 init();
 
 function init(){
-
     if(gameMode === 'easy') {
         bombsLeft = 10;
         boardSizeX = 8;
         boardSizeTotal = 64;
         numToWin = 54;
-        $('.upperContainer').css({width: '220px'});
+        $upperContainer.css({width: '220px'});
         $bombsLeftDisplay.css({padding: '5px 3px;'});
     } else if(gameMode === 'hard'){
         bombsLeft = 40;
         boardSizeX = 16;
         boardSizeTotal = 256;
         numToWin = 216;
-        $('.upperContainer').css({width: '435px'});
+        $upperContainer.css({width: '435px'});
     }
-
-    $body.css({background: 'white'});
-    sumOfWinningSquares = 0;
-    tdDisplayContent = '';
-    timePassed = 0;
-    firstClick = true;
-    $timePassedDisplay.val(timePassed);
 
     // render initial table with tr, td and their ids
     var rows = 0;
@@ -63,13 +56,20 @@ function init(){
     $squares = $('td');
     $tbody.on('click', 'td', handleSquareClick);
 
+    // Reset variables and background
+    $body.css({background: 'white'});
+    sumOfWinningSquares = timePassed = 0;
+    tdDisplayContent = '';
+    firstClick = true;
+    $timePassedDisplay.val(timePassed);
+
     // Makes the square dark gray and clears all the bomb icons
     $squares.addClass('unclicked').removeClass('clicked').html('');
 
     // Reset button will be a happy face
     $resetButton.html('<i class="fa fa-smile-o" aria-hidden="true"></i>');
 
-    // Create an array with 10 indexes where the bombs are going
+    // Create an array with indexes where the bombs are going
     randomBombs = [];
     for(var i = 0; i < bombsLeft; i++){
         var random = Math.floor(Math.random() * boardSizeTotal);
@@ -79,6 +79,7 @@ function init(){
             i--;
         }
     }
+
     // Create the array that holds objects with display false and its coordinate
     board = [];
     xcoor = ycoor = 0;
@@ -191,7 +192,6 @@ function handleSquareClick(evt){
     
     if (evt.shiftKey) {         // if shift+click
         tdDisplayContent = evt.currentTarget;
-        console.log(tdDisplayContent);
     } else {                    // else regular click
         if(evt.currentTarget.innerHTML === ''){ // if it doesn't have a flag on square, continue (cannot open a square if it has a flag)
             openArea(board[evt.target.id].coor.x, board[evt.target.id].coor.y);
@@ -219,7 +219,7 @@ function handleHardClick(){
     init();
 }
 
-function handleResetClick(evt){
+function handleResetClick(){
     $tbody.off('click', 'td', handleSquareClick);
     clearInterval(timerId);
     init();
