@@ -1,7 +1,9 @@
 $(function(){
 
 /*----- app's state (variables) -----*/
-var board, randomBombs, xcoor, ycoor, sumOfWinningSquares, tdDisplayContent, bombsLeft, timePassed, firstClick, timerId;
+var board, randomBombs, xcoor, ycoor, sumOfWinningSquares, tdDisplayContent, bombsLeft, timePassed, firstClick, timerId, 
+    boardSizeX, boardSizeTotal, numToWin;
+var gameMode = 'easy';
 
 /*----- cached element references -----*/
 var $squares = $('td');
@@ -9,6 +11,8 @@ var $body = $('body');
 var $resetButton = $('#resetButton');
 var $bombsLeftDisplay = $('#bombsLeft');
 var $timePassedDisplay = $('#timePassed');
+var $easyButton = $('#easy');
+var $hardButton = $('#hard');
 
 /*----- event listeners -----*/
 $resetButton.on('click', handleResetClick);
@@ -19,10 +23,18 @@ init();
 function init(){
     $('tbody').on('click', 'td', handleSquareClick);
 
+    if(gameMode === 'easy') {
+        bombsLeft = 10;
+        boardSizeX = 8;
+        boardSizeTotal = 64;
+        numToWin = 54;
+
+    }
+
+
     $body.css({background: 'white'});
     sumOfWinningSquares = 0;
     tdDisplayContent = '';
-    bombsLeft = 10;
     timePassed = 0;
     firstClick = true;
     $timePassedDisplay.val(timePassed);
@@ -35,8 +47,8 @@ function init(){
 
     // Create an array with 10 indexes where the bombs are going
     randomBombs = [];
-    for(var i = 0; i < 10; i++){
-        var random = Math.floor(Math.random() * 64);
+    for(var i = 0; i < bombsLeft; i++){
+        var random = Math.floor(Math.random() * boardSizeTotal);
         if(!randomBombs.includes(random)){      // if the array doesn't have the same numbere, push
             randomBombs.push(random);
         } else {                                // else, decrease i to get a new number
@@ -46,14 +58,14 @@ function init(){
     // Create the array that holds objects with display false and its coordinate
     board = [];
     xcoor = ycoor = 0;
-    for(var i = 0; i < 64; i++){
+    for(var i = 0; i < boardSizeTotal; i++){
         var square = {
             display: false,
             coor: {x: xcoor, y: ycoor}
         };
         board.push(square);
         xcoor++;
-        if(xcoor > 7){
+        if(xcoor > boardSizeX - 1){
             ycoor++;
             xcoor = 0;
         }
@@ -80,7 +92,7 @@ function addNumberValue(){
             // upper left
             tempx = xcoor - 1;
             tempy = ycoor - 1;
-            for(var i = 0; i < 64; i++){
+            for(var i = 0; i < boardSizeTotal; i++){
                 if(board[i].coor.x === tempx && board[i].coor.y === tempy){
                     if (board[i].value === 'bomb') numberOfBombs++;
                 }
@@ -88,7 +100,7 @@ function addNumberValue(){
             // upper middle
             tempx = xcoor;
             tempy = ycoor - 1;
-            for(var i = 0; i < 64; i++){
+            for(var i = 0; i < boardSizeTotal; i++){
                 if(board[i].coor.x === tempx && board[i].coor.y === tempy){
                     if (board[i].value === 'bomb') numberOfBombs++;
                 }
@@ -96,7 +108,7 @@ function addNumberValue(){
             // upper right
             tempx = xcoor + 1;
             tempy = ycoor - 1;
-            for(var i = 0; i < 64; i++){
+            for(var i = 0; i < boardSizeTotal; i++){
                 if(board[i].coor.x === tempx && board[i].coor.y === tempy){
                     if (board[i].value === 'bomb') numberOfBombs++;
                 }
@@ -104,7 +116,7 @@ function addNumberValue(){
             // middle right
             tempx = xcoor + 1;
             tempy = ycoor;
-            for(var i = 0; i < 64; i++){
+            for(var i = 0; i < boardSizeTotal; i++){
                 if(board[i].coor.x === tempx && board[i].coor.y === tempy){
                     if (board[i].value === 'bomb') numberOfBombs++;
                 }
@@ -112,7 +124,7 @@ function addNumberValue(){
             // lower right
             tempx = xcoor + 1;
             tempy = ycoor + 1;
-            for(var i = 0; i < 64; i++){
+            for(var i = 0; i < boardSizeTotal; i++){
                 if(board[i].coor.x === tempx && board[i].coor.y === tempy){
                     if (board[i].value === 'bomb') numberOfBombs++;
                 }
@@ -120,7 +132,7 @@ function addNumberValue(){
             // lower middle
             tempx = xcoor;
             tempy = ycoor + 1;
-            for(var i = 0; i < 64; i++){
+            for(var i = 0; i < boardSizeTotal; i++){
                 if(board[i].coor.x === tempx && board[i].coor.y === tempy){
                     if (board[i].value === 'bomb') numberOfBombs++;
                 }
@@ -128,7 +140,7 @@ function addNumberValue(){
             // lower left
             tempx = xcoor - 1;
             tempy = ycoor + 1;
-            for(var i = 0; i < 64; i++){
+            for(var i = 0; i < boardSizeTotal; i++){
                 if(board[i].coor.x === tempx && board[i].coor.y === tempy){
                     if (board[i].value === 'bomb') numberOfBombs++;
                 }
@@ -136,7 +148,7 @@ function addNumberValue(){
             // middle left
             tempx = xcoor - 1;
             tempy = ycoor;
-            for(var i = 0; i < 64; i++){
+            for(var i = 0; i < boardSizeTotal; i++){
                 if(board[i].coor.x === tempx && board[i].coor.y === tempy){
                     if (board[i].value === 'bomb') numberOfBombs++;
                 }
@@ -172,6 +184,10 @@ function handleResetClick(evt){
 }
 
 function render(){
+    if(gameMode === 'easy'){
+        $easyButton.addClass('modeSelected');
+    }
+
     board.forEach(function(el, index){
         if(el.display){
             if(el.value === 'bomb'){            // if the user clicks on the bomb, it will show all the bombs
@@ -208,7 +224,7 @@ function render(){
     $bombsLeftDisplay.val(bombsLeft);
 
     checkWinner();
-    if(sumOfWinningSquares === 54){
+    if(sumOfWinningSquares === numToWin){
         $body.css({background: '#a0e7a0'});
         $resetButton.html('');
         $resetButton.html('<i class="fa fa-trophy" aria-hidden="true"></i>');
