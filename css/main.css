@@ -12,10 +12,36 @@ body {
 
 h1 {
     text-align: center;
-    margin: 3% 0;
+    /*margin: 3% 0;*/
 }
 
-#upperContainer {
+.gameModeContainer {
+    width: 300px;
+    margin: 1.5% auto 1.5% auto;
+    padding: 15px 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+#easy, #hard {
+    background: #ECF0F1;
+    color: black;
+    height: 50px;
+    padding: 5px 20px;
+    text-align: center;
+    font-size: 1em;
+    border-right: 2px solid #7C8184;
+    border-bottom: 2px solid #7C8184;
+    border-top: 2px solid #E3E7EA;
+    border-left: 2px solid #E3E7EA;
+    outline: none;
+}
+
+.modeSelected {
+    background: #d6dadb;
+}
+
+.upperContainer {
     background: #ECF0F1;
     width: 300px;
     margin: 0 auto;
@@ -47,6 +73,7 @@ h1 {
     border-bottom: 2px solid #7C8184;
     border-top: 2px solid #E3E7EA;
     border-left: 2px solid #E3E7EA;
+    outline: none;
 }
 
 table {
