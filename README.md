@@ -16,7 +16,7 @@ The objective of the game is to clear the board without revealing any mines.
     * If the square contains a mine, it's game over. 
     * If it reveals a number, it indicates how many mines are adjecent to the number. 
     * If you click on an empty square, it can help you by opening neighboring squares.
-* If you know where a mine is, use **shift+click** to put a flag (the mine counter will decrease).
+* If you know where a mine is, use **shift+click (or longclick)** to put a flag (the mine counter will decrease).
 * If you take longer than 999 seconds, you lose.
 
 ## Technologies used:
@@ -31,7 +31,7 @@ Will implemement an expert button for 16x30 board with 99 mines.
 ## Screenshots:
 * Easy mode:
 
-![](images/easy-start.png) ![](images/easy-win.png) ![](images/easy-lose.png)
+![](images/easy-start.png) &nbsp; ![](images/easy-win.png) &nbsp; ![](images/easy-lose.png)
 * Hard mode:
 
-![](images/hard-start.png) ![](images/hard-win.png) ![](images/hard-lose.png)
+![](images/hard-start.png) &nbsp; ![](images/hard-win.png) &nbsp; ![](images/hard-lose.png)

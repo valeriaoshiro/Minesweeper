@@ -52,6 +52,19 @@ function init(){
     }
     $squares = $('td');
     $tbody.on('click', 'td', handleSquareClick);
+    var timer = null;
+    // event listener for long click
+    $tbody.on('mousedown', function(evt){
+        timer = setTimeout( function(){
+            handleSquareClick(evt);
+        }, 1000 );
+    });
+
+    $tbody.on('mouseup', function(){
+        clearTimeout( timer );
+    });
+
+    
 
     // Reset variables and background
     $body.css({background: 'white'});
@@ -235,9 +248,12 @@ function handleSquareClick(evt){
         timerId = setInterval(countTimer, 1000);
     }    
     
-    if (evt.shiftKey) {         // if shift+click
+    if(evt.type === 'mousedown'){       // if long click (for mobile screens)
+        tdDisplayContent = evt.target;
+    }
+    else if (evt.shiftKey) {            // else if shift+click
         tdDisplayContent = evt.currentTarget;
-    } else {                    // else regular click
+    } else {                            // else regular click
         if(evt.currentTarget.innerHTML === ''){ // if it doesn't have a flag on square, continue (cannot open a square if it has a flag)
             openArea(board[evt.target.id].coor.x, board[evt.target.id].coor.y);
         }
