@@ -23,7 +23,7 @@ The objective of the game is to clear the board without revealing any mines.
 HTML, CSS, JavaScript, jQuery, and git for version control.
 
 ## Getting started:
-Click here to play the game
+Click [here](https://valeriaoshiro.github.io/Minesweeper/) to play the game
 
 ## Next steps:
 Will implemement an expert button for 16x30 board with 99 mines.
