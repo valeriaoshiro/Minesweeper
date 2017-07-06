@@ -30,14 +30,11 @@ function init(){
         boardSizeX = 8;
         boardSizeTotal = 64;
         numToWin = 54;
-        $upperContainer.css({width: '220px'});
-        $bombsLeftDisplay.css({padding: '5px 3px;'});
     } else if(gameMode === 'hard'){
         bombsLeft = 40;
         boardSizeX = 16;
         boardSizeTotal = 256;
         numToWin = 216;
-        $upperContainer.css({width: '435px'});
     }
 
     // render initial table with tr, td and their ids
@@ -105,6 +102,54 @@ function init(){
     addNumberValue();
 
     render();
+}
+
+function render(){
+    board.forEach(function(el, index){
+        if(el.display){
+            if(el.value === 'bomb'){            // if the user clicks on the bomb, it will show all the bombs
+                randomBombs.forEach(function(el){
+                    $squares.eq(el).html('<i class="fa fa-bomb" aria-hidden="true"></i>');
+                });
+                $body.css({background: '#ff6961'});
+                $resetButton.html('');
+                $resetButton.html('<i class="fa fa-frown-o" aria-hidden="true"></i>');
+                $tbody.off('click', 'td', handleSquareClick);
+                clearInterval(timerId);
+            } else if (!el.value) {             // if the suer clicks on empty square, shows nothing
+                $squares.eq(index).text('');
+            } else {                            // else, show the number
+                $squares.eq(index).text(el.value); 
+            } 
+            $squares.eq(index).addClass('clicked').removeClass('unclicked');
+       }
+    });
+
+    // checks if the user has shift+clicked. If so, it toggles between flag or empty
+    if(tdDisplayContent) {
+        if(tdDisplayContent.innerHTML === ''){
+            bombsLeft--;
+            tdDisplayContent.innerHTML = '<i class="fa fa-flag" aria-hidden="true"></i>';
+        } else {
+            tdDisplayContent.innerHTML = '';
+            bombsLeft++;
+        }
+        tdDisplayContent = '';
+    }
+    
+    // update the number of bombs left
+    $bombsLeftDisplay.val(bombsLeft);
+
+    checkWinner();
+    if(sumOfWinningSquares === numToWin){
+        $body.css({background: '#a0e7a0'});
+        $resetButton.html('');
+        $resetButton.html('<i class="fa fa-trophy" aria-hidden="true"></i>');
+        $tbody.off('click', 'td', handleSquareClick);
+        clearInterval(timerId);
+    }
+
+    $upperContainer.css({width: $('table')[0].offsetWidth});
 }
 
 function addNumberValue(){
@@ -225,52 +270,6 @@ function handleResetClick(){
     init();
 }
 
-function render(){
-    board.forEach(function(el, index){
-        if(el.display){
-            if(el.value === 'bomb'){            // if the user clicks on the bomb, it will show all the bombs
-                randomBombs.forEach(function(el){
-                    $squares.eq(el).html('<i class="fa fa-bomb" aria-hidden="true"></i>');
-                });
-                $body.css({background: '#ff6961'});
-                $resetButton.html('');
-                $resetButton.html('<i class="fa fa-frown-o" aria-hidden="true"></i>');
-                $tbody.off('click', 'td', handleSquareClick);
-                clearInterval(timerId);
-            } else if (!el.value) {             // if the suer clicks on empty square, shows nothing
-                $squares.eq(index).text('');
-            } else {                            // else, show the number
-                $squares.eq(index).text(el.value); 
-            } 
-            $squares.eq(index).addClass('clicked').removeClass('unclicked');
-       }
-    });
-
-    // checks if the user has shift+clicked. If so, it toggles between flag or empty
-    if(tdDisplayContent) {
-        if(tdDisplayContent.innerHTML === ''){
-            bombsLeft--;
-            tdDisplayContent.innerHTML = '<i class="fa fa-flag" aria-hidden="true"></i>';
-        } else {
-            tdDisplayContent.innerHTML = '';
-            bombsLeft++;
-        }
-        tdDisplayContent = '';
-    }
-    
-    // update the number of bombs left
-    $bombsLeftDisplay.val(bombsLeft);
-
-    checkWinner();
-    if(sumOfWinningSquares === numToWin){
-        $body.css({background: '#a0e7a0'});
-        $resetButton.html('');
-        $resetButton.html('<i class="fa fa-trophy" aria-hidden="true"></i>');
-        $tbody.off('click', 'td', handleSquareClick);
-        clearInterval(timerId);
-    }
-}
-
 function checkWinner(){
     sumOfWinningSquares = 0;
     board.forEach(function(el){
@@ -320,6 +319,5 @@ function countTimer(){
         clearInterval(timerId);
     }
 }
-
 
 });
