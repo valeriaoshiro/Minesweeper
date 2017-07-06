@@ -28,3 +28,10 @@ Click [here](https://valeriaoshiro.github.io/Minesweeper/) to play the game
 ## Next steps:
 Will implemement an expert button for 16x30 board with 99 mines.
 
+## Screenshots:
+* Easy mode:
+
+![](images/easy-start.png) ![](images/easy-win.png) ![](images/easy-lose.png)
+* Hard mode:
+
+![](images/hard-start.png) ![](images/hard-win.png) ![](images/hard-lose.png)
