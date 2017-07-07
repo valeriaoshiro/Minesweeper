@@ -51,20 +51,18 @@ function init(){
         $tbody.append($trTemp);
     }
     $squares = $('td');
+    // event listener for click
     $tbody.on('click', 'td', handleSquareClick);
-    var timer = null;
     // event listener for long click
+    var timer = null;
     $tbody.on('mousedown', function(evt){
         timer = setTimeout( function(){
             handleSquareClick(evt);
         }, 1000 );
     });
-
     $tbody.on('mouseup', function(){
         clearTimeout( timer );
     });
-
-    
 
     // Reset variables and background
     $body.css({background: 'white'});
@@ -129,7 +127,7 @@ function render(){
                 $resetButton.html('<i class="fa fa-frown-o" aria-hidden="true"></i>');
                 $tbody.off('click', 'td', handleSquareClick);
                 clearInterval(timerId);
-            } else if (!el.value) {             // if the suer clicks on empty square, shows nothing
+            } else if (!el.value) {             // if the user clicks on empty square, shows nothing
                 $squares.eq(index).text('');
             } else {                            // else, show the number
                 $squares.eq(index).text(el.value); 
@@ -138,7 +136,7 @@ function render(){
        }
     });
 
-    // checks if the user has shift+clicked. If so, it toggles between flag or empty
+    // checks if the user has shift+clicked or longclicked. If so, it toggles between flag or empty
     if(tdDisplayContent) {
         if(tdDisplayContent.innerHTML === ''){
             bombsLeft--;
@@ -241,6 +239,56 @@ function addNumberValue(){
     });
 }
 
+function checkWinner(){
+    sumOfWinningSquares = 0;
+    board.forEach(function(el){
+        if(el.display && el.value !== 'bomb'){
+            sumOfWinningSquares++;
+        }
+    });
+}
+
+function openArea(x, y){
+    board.forEach(function(square, idx){
+        if(square.coor.x === x && square.coor.y === y) {
+            // base case
+            if(square.display){return;}                         // if it has already been clicked, return
+            if($squares[idx].innerHTML){return;}                // if it has a flag, return
+            if(square.value > 0 || square.value === 'bomb') {   // if it's a number or bomb, show it
+                square.display = true;
+                return;
+            } else {                                            // else, it's an open space, check for adjacent spaces
+                square.display = true;
+                var tempxneg = x - 1;
+                var tempyneg = y - 1;
+                var tempxpos = x + 1;
+                var tempypos = y + 1;
+                openArea(tempxneg, tempyneg);   // upper left
+                openArea(x, tempyneg);          // upper middle
+                openArea(tempxpos, tempyneg);   // upper right
+                openArea(tempxpos, y);          // middle right
+                openArea(tempxpos, tempypos);   // lower right
+                openArea(x, tempypos);          // lower middle
+                openArea(tempxneg, tempypos);   // lower left
+                openArea(tempxneg, y);          // middle left
+                
+            }
+        } 
+    });   
+}
+
+function countTimer(){
+    ++timePassed;
+    $timePassedDisplay.val(timePassed);
+    if(timePassed === 999){     // if the user has run out of time, game over
+        $body.css({background: '#ff6961'});
+        $resetButton.html('');
+        $resetButton.html('<i class="fa fa-frown-o" aria-hidden="true"></i>');
+        $tbody.off('click', 'td', handleSquareClick);
+        clearInterval(timerId);
+    }
+}
+
 function handleSquareClick(evt){
     // if it's the first click, start counter
     if(firstClick) { 
@@ -284,56 +332,6 @@ function handleResetClick(){
     $tbody.off('click', 'td', handleSquareClick);
     clearInterval(timerId);
     init();
-}
-
-function checkWinner(){
-    sumOfWinningSquares = 0;
-    board.forEach(function(el){
-        if(el.display && el.value !== 'bomb'){
-            sumOfWinningSquares++;
-        }
-    });
-}
-
-function openArea(x, y){
-    board.forEach(function(square, idx){
-        if(square.coor.x === x && square.coor.y === y) {
-            // base case
-            if(square.display){return;}                         // if it has already been clicked, return
-            if($squares[idx].innerHTML){return;}                   // if it has a flag, return
-            if(square.value > 0 || square.value === 'bomb') {   // if it's a number or bomb, show it
-                square.display = true;
-                return;
-            } else {                                            // else, it's an open space, check for adjacent spaces
-                square.display = true;
-                var tempxneg = x - 1;
-                var tempyneg = y - 1;
-                var tempxpos = x + 1;
-                var tempypos = y + 1;
-                openArea(tempxneg, tempyneg);   // upper left
-                openArea(x, tempyneg);          // upper middle
-                openArea(tempxpos, tempyneg);   // upper right
-                openArea(tempxpos, y);          // middle right
-                openArea(tempxpos, tempypos);   // lower right
-                openArea(x, tempypos);          // lower middle
-                openArea(tempxneg, tempypos);   // lower left
-                openArea(tempxneg, y);          // middle left
-                
-            }
-        } 
-    });   
-}
-
-function countTimer(){
-    ++timePassed;
-    $timePassedDisplay.val(timePassed);
-    if(timePassed === 999){     // if the user has run out of time, game over
-        $body.css({background: '#ff6961'});
-        $resetButton.html('');
-        $resetButton.html('<i class="fa fa-frown-o" aria-hidden="true"></i>');
-        $tbody.off('click', 'td', handleSquareClick);
-        clearInterval(timerId);
-    }
 }
 
 });
