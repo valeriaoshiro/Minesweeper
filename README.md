@@ -26,7 +26,7 @@ HTML, CSS, JavaScript, jQuery, and git for version control.
 Click [here](https://valeriaoshiro.github.io/Minesweeper/) to play the game
 
 ## Next steps:
-Will implemement an expert button for 16x30 board with 99 mines.
+Will implemement an expert button for 16x30 board with 99 mines. I would also like to play my project on my cellphone.
 
 ## Screenshots:
 * Easy mode:
