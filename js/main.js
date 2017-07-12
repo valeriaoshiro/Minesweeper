@@ -53,16 +53,7 @@ function init(){
     $squares = $('td');
     // event listener for click
     $tbody.on('click', 'td', handleSquareClick);
-    // event listener for long click
-    var timer = null;
-    $tbody.on('mousedown', function(evt){
-        timer = setTimeout( function(){
-            handleSquareClick(evt);
-        }, 1000 );
-    });
-    $tbody.on('mouseup', function(){
-        clearTimeout( timer );
-    });
+    $tbody.on('contextmenu', 'td', handleRightClick);
 
     // Reset variables and background
     $body.css({background: 'white'});
@@ -126,6 +117,7 @@ function render(){
                 $resetButton.html('');
                 $resetButton.html('<i class="fa fa-frown-o" aria-hidden="true"></i>');
                 $tbody.off('click', 'td', handleSquareClick);
+                $tbody.off('contextmenu', 'td', handleRightClick);
                 clearInterval(timerId);
             } else if (!el.value) {             // if the user clicks on empty square, shows nothing
                 $squares.eq(index).text('');
@@ -157,6 +149,7 @@ function render(){
         $resetButton.html('');
         $resetButton.html('<i class="fa fa-trophy" aria-hidden="true"></i>');
         $tbody.off('click', 'td', handleSquareClick);
+        $tbody.off('contextmenu', 'td', handleRightClick);
         clearInterval(timerId);
     }
 
@@ -285,6 +278,7 @@ function countTimer(){
         $resetButton.html('');
         $resetButton.html('<i class="fa fa-frown-o" aria-hidden="true"></i>');
         $tbody.off('click', 'td', handleSquareClick);
+        $tbody.off('contextmenu', 'td', handleRightClick);
         clearInterval(timerId);
     }
 }
@@ -295,11 +289,7 @@ function handleSquareClick(evt){
         firstClick = false;
         timerId = setInterval(countTimer, 1000);
     }    
-    
-    if(evt.type === 'mousedown'){       // if long click (for mobile screens)
-        tdDisplayContent = evt.target;
-    }
-    else if (evt.shiftKey) {            // else if shift+click
+    if (evt.shiftKey) {  // else if shift+click 
         tdDisplayContent = evt.currentTarget;
     } else {                            // else regular click
         if(evt.currentTarget.innerHTML === ''){ // if it doesn't have a flag on square, continue (cannot open a square if it has a flag)
@@ -309,6 +299,11 @@ function handleSquareClick(evt){
 
     render();
 }
+function handleRightClick(evt){
+    evt.preventDefault();
+    tdDisplayContent = evt.currentTarget;
+    render();
+}
 
 function handleEasyClick(){
     gameMode = 'easy';
@@ -316,6 +311,7 @@ function handleEasyClick(){
     $hardButton.removeClass('modeSelected');
     clearInterval(timerId);
     $tbody.off('click', 'td', handleSquareClick);
+    $tbody.off('contextmenu', 'td', handleRightClick);
     init();
 }
 
@@ -325,11 +321,13 @@ function handleHardClick(){
     $easyButton.removeClass('modeSelected');
     clearInterval(timerId);
     $tbody.off('click', 'td', handleSquareClick);
+    $tbody.off('contextmenu', 'td', handleRightClick);
     init();
 }
 
 function handleResetClick(){
     $tbody.off('click', 'td', handleSquareClick);
+    $tbody.off('contextmenu', 'td', handleRightClick);
     clearInterval(timerId);
     init();
 }
