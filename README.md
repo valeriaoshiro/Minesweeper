@@ -16,7 +16,7 @@ The objective of the game is to clear the board without revealing any mines.
     * If the square contains a mine, it's game over. 
     * If it reveals a number, it indicates how many mines are adjecent to the number. 
     * If you click on an empty square, it can help you by opening neighboring squares.
-* If you know where a mine is, use **shift+click (or longclick)** to put a flag (the mine counter will decrease).
+* If you know where a mine is, use **shift+click (or right click)** to put a flag (the mine counter will decrease).
 * If you take longer than 999 seconds, you lose.
 
 ## Technologies used:
